@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "13412013163",
+    "project_id": "damproyecto-3b68b",
+    "storage_bucket": "damproyecto-3b68b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:13412013163:android:ca206f1996ffed27b44d2e",
+        "android_client_info": {
+          "package_name": "es.rfvl.ronal_proyect_dam"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCSDPjxsjoCBnOTTOwMrGu29H1eiI3MzE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

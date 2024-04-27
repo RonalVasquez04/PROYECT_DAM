@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/bnvPrincipal"
+        android:icon="@drawable/principal"
+        android:title="Princiapl"/>
+
+
+    <item
+        android:id="@+id/bnvSearch"
+        android:icon="@drawable/search"
+        android:title="Search"
+
+        />
+
+    <item
+        android:id="@+id/bnvShop"
+        android:title="Shop"
+        android:icon="@drawable/shop"
+ />
+    <item
+        android:id="@+id/bnvUser"
+        android:title="User"
+        android:icon="@drawable/user"
+
+        />
+</menu>
