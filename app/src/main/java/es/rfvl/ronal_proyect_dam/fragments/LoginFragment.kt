@@ -80,7 +80,7 @@ class LoginFragment : Fragment() {
                         if (userLogged != null){
 
                             //mListener.onLoginClicked()
-                            Toast.makeText(requireContext(), "YESSSSS", Toast.LENGTH_LONG).show()
+                            Toast.makeText(requireContext(), "INICO DE SESIÓN CORRECTO", Toast.LENGTH_LONG).show()
                         }else{
                             Toast.makeText(requireContext(), "Bad credentials", Toast.LENGTH_LONG).show()
                             Snackbar.make(binding.root, "Registrese si no tiene una cuenta creada", Snackbar.LENGTH_SHORT).show()
