@@ -57,15 +57,9 @@ class LoginFragment : Fragment() {
     }
 
     private fun underlineText(textView: TextView) {
-        // Obtiene el texto actual del TextView
         val text = textView.text.toString()
-
-        // Crea un SpannableString para aplicar el subrayado
-
         val spannableString = SpannableString(text)
         spannableString.setSpan(UnderlineSpan(), 0, text.length, 0)
-
-        // Aplica el SpannableString al TextView
         textView.text = spannableString
     }
 
@@ -80,9 +74,19 @@ class LoginFragment : Fragment() {
                         if (userLogged != null){
 
                             //mListener.onLoginClicked()
+
+                            val nuevoFragmento = ProfileFragment()
+                            val fragmentManager = requireActivity().supportFragmentManager
+                            val fragmentTransaction = fragmentManager.beginTransaction()
+                            fragmentTransaction.replace(R.id.fragmentContainerViewMAIN, nuevoFragmento)
+                            fragmentTransaction.addToBackStack(null)
+                            fragmentTransaction.commit()
+
                             Toast.makeText(requireContext(), "INICO DE SESIÓN CORRECTO", Toast.LENGTH_LONG).show()
+
+
                         }else{
-                            Toast.makeText(requireContext(), "Bad credentials", Toast.LENGTH_LONG).show()
+                            Toast.makeText(requireContext(), "Credenciales incorrectas", Toast.LENGTH_LONG).show()
                             Snackbar.make(binding.root, "Registrese si no tiene una cuenta creada", Snackbar.LENGTH_SHORT).show()
 
                         }

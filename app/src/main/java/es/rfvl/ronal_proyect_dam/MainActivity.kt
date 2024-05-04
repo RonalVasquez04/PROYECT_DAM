@@ -7,6 +7,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import es.rfvl.ronal_proyect_dam.databinding.ActivityMainBinding
 import es.rfvl.ronal_proyect_dam.fragments.InicioFragment
 import es.rfvl.ronal_proyect_dam.fragments.LoginFragment
+import es.rfvl.ronal_proyect_dam.fragments.MisComprasFragment
+import es.rfvl.ronal_proyect_dam.fragments.SearchFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,11 +33,25 @@ class MainActivity : AppCompatActivity() {
                     binding.myToolBar.visibility = View.GONE
                     binding.bottomNavigationView.visibility = View.GONE
                     true
-
-
                 }
                 R.id.bnvPrincipal -> {
                     val nuevoFragmento = InicioFragment()
+                    this.supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerViewMAIN, nuevoFragmento)
+                        .addToBackStack(null)
+                        .commit()
+                    true
+                }
+                R.id.bnvShop -> {
+                    val nuevoFragmento = MisComprasFragment()
+                    this.supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerViewMAIN, nuevoFragmento)
+                        .addToBackStack(null)
+                        .commit()
+                    true
+                }
+                R.id.bnvSearch -> {
+                    val nuevoFragmento = SearchFragment()
                     this.supportFragmentManager.beginTransaction()
                         .replace(R.id.fragmentContainerViewMAIN, nuevoFragmento)
                         .addToBackStack(null)
