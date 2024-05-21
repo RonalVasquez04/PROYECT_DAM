@@ -4,5 +4,5 @@ import android.app.appsearch.SearchResults
 import com.google.gson.annotations.SerializedName
 
 data class ArticulosResponse(
-    @SerializedName("search_result") val articulo: List<ResultsResponse>
+    @SerializedName("search_result") val articulo: List<ProductResponse>
 )

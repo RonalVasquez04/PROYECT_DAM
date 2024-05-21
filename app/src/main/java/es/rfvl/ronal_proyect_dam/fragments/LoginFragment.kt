@@ -1,5 +1,6 @@
 package es.rfvl.ronal_proyect_dam.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
@@ -75,6 +76,14 @@ class LoginFragment : Fragment() {
 
                             //mListener.onLoginClicked()
 
+                            val prefs = requireActivity().getSharedPreferences("es.rfvl.ronal_proyect_dam", Context.MODE_PRIVATE);
+                            val nombre = prefs.getString("signature","");
+                            with(prefs.edit()){
+                                putString("signature",user)
+                                putBoolean("syncLogin",true)
+                                //putBoolean("syncCheck", false)
+                                apply()
+                            }
                             val nuevoFragmento = ProfileFragment()
                             val fragmentManager = requireActivity().supportFragmentManager
                             val fragmentTransaction = fragmentManager.beginTransaction()

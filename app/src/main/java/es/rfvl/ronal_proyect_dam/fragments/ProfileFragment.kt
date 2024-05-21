@@ -1,5 +1,6 @@
 package es.rfvl.ronal_proyect_dam.fragments
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -17,7 +18,22 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentProfileBinding.inflate(layoutInflater)
+
+        binding.btnCerrarSesion.setOnClickListener {
+            cerrarSesion()
+        }
+
         return binding.root
+    }
+
+    private fun cerrarSesion(){
+        val prefs = requireActivity().getSharedPreferences("es.rfvl.ronal_proyect_dam", Context.MODE_PRIVATE);
+        with(prefs.edit()){
+            putString("signature","")
+            putBoolean("syncLogin",false)
+            apply()
+        }
+        fragmentManager?.popBackStack()
     }
 
 }

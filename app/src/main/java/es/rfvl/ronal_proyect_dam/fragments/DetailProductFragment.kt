@@ -9,7 +9,6 @@ import es.rfvl.ronal_proyect_dam.R
 import es.rfvl.ronal_proyect_dam.databinding.FragmentDetailProductBinding
 import es.rfvl.ronal_proyect_dam.databinding.FragmentProfileBinding
 
-
 class DetailProductFragment : Fragment() {
 
     private lateinit var binding: FragmentDetailProductBinding

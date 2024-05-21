@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit
 
 class RetrofitObject {
     companion object {
-        private const val BASE_URL = "https://api.bluecartapi.com/"
+        private const val BASE_URL = "https://fakestoreapi.com/"
 
         // Configuración de OkHttpClient con timeouts
         private val okHttpClient = OkHttpClient.Builder()

@@ -26,7 +26,7 @@ class InicioFragment : Fragment() {
     private lateinit var binding: FragmentInicioBinding
     private lateinit var mAdapter: articuloAdapter
     private lateinit var listArticulos: MutableList<Articulo>
-    val apiKey = "1BA925726E31431BAC9CB6C51F14408D"
+
 
 
     override fun onCreateView(
@@ -34,41 +34,37 @@ class InicioFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentInicioBinding.inflate(layoutInflater)
-        loadArticles("phone")
+        loadArticles()
         setUpRecyclerView()
         return binding.root
     }
 
     private fun setUpRecyclerView() {
         listArticulos = emptyList<Articulo>().toMutableList()
+
         mAdapter = articuloAdapter(listArticulos)
         binding.myRecViewInicio.adapter = mAdapter
         binding.myRecViewInicio.layoutManager = GridLayoutManager(requireContext(),2)
     }
 
-    private fun loadArticles(busqueda: String){
-        if (!busqueda.isNullOrEmpty()){
+    private fun loadArticles(){
+
             lifecycleScope.launch(Dispatchers.IO) {
 
-
-                val call = RetrofitObject.getInstance().create(ArticuloService::class.java).getListArticles(apiKey,busqueda)
+                val call = RetrofitObject.getInstance().create(ArticuloService::class.java).getListArticles();
                 val response = call.body()
 
                 withContext(Dispatchers.Main){
 
                     if (response != null){
-                        val listaArticulos = response.articulo
 
-                        if (listaArticulos != null){
-                            for (article in listaArticulos){
-                                listArticulos.add(Articulo(article.product.title,article.offers.primary.price,article.product.mainImage.toInt()))
+                            for (article in response){
+                                listArticulos.add(Articulo(article.title,article.price,article.image))
                                 mAdapter.notifyDataSetChanged()
                             }
-                        }
                     }
                 }
             }
-        }
     }
 
     override fun onResume() {
