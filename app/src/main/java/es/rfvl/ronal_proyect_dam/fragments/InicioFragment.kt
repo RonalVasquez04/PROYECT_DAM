@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class InicioFragment : Fragment() {
+class InicioFragment : Fragment() , articuloAdapter.OnProductClickListener{
 
     private lateinit var binding: FragmentInicioBinding
     private lateinit var mAdapter: articuloAdapter
@@ -42,7 +42,7 @@ class InicioFragment : Fragment() {
     private fun setUpRecyclerView() {
         listArticulos = emptyList<Articulo>().toMutableList()
 
-        mAdapter = articuloAdapter(listArticulos)
+        mAdapter = articuloAdapter(listArticulos,this)
         binding.myRecViewInicio.adapter = mAdapter
         binding.myRecViewInicio.layoutManager = GridLayoutManager(requireContext(),2)
     }
@@ -59,7 +59,7 @@ class InicioFragment : Fragment() {
                     if (response != null){
 
                             for (article in response){
-                                listArticulos.add(Articulo(article.title,article.price,article.image))
+                                listArticulos.add(Articulo(article.title,article.price,article.image, article.id,article.description,article.category,article.rating.rate,article.rating.count))
                                 mAdapter.notifyDataSetChanged()
                             }
                     }
@@ -90,6 +90,29 @@ class InicioFragment : Fragment() {
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
+    }
+
+    override fun onProductClick(d: Articulo) {
+        val nuevoFragmento = DetailProductFragment()
+        val args = Bundle()
+
+        args.putInt("idArticle",d.id)
+        args.putString("titleArticle", d.title)
+        args.putDouble("priceArticle",d.price)
+        args.putString("descriptionArticle", d.description)
+        args.putString("categoryArticle", d.category)
+        args.putString("imageArticle", d.image)
+        args.putDouble("rateArticle",d.rate)
+        args.putInt("countRateArticle",d.countRate)
+        nuevoFragmento.arguments = args
+
+        val fragmentManager = requireActivity().supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+
+        fragmentTransaction.replace(R.id.fragmentContainerViewMAIN, nuevoFragmento)
+        fragmentTransaction.addToBackStack(null)
+
+        fragmentTransaction.commit()
     }
 
 

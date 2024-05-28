@@ -10,7 +10,7 @@ import com.squareup.picasso.Picasso
 import es.rfvl.ronal_proyect_dam.R
 import es.rfvl.ronal_proyect_dam.classes.Articulo
 
-class articuloAdapter(private val productos: MutableList<Articulo>): RecyclerView.Adapter<articuloAdapter.ArticulosViewFolder>() {
+class articuloAdapter(private val productos: MutableList<Articulo>,private val mListener: OnProductClickListener): RecyclerView.Adapter<articuloAdapter.ArticulosViewFolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -22,6 +22,7 @@ class articuloAdapter(private val productos: MutableList<Articulo>): RecyclerVie
     override fun onBindViewHolder(holder: articuloAdapter.ArticulosViewFolder, position: Int) {
         val producto = productos[position]
         holder.bindItem(producto)
+        holder.itemView.setOnClickListener{ mListener.onProductClick(producto)}
     }
 
     override fun getItemCount(): Int {
@@ -37,7 +38,7 @@ class articuloAdapter(private val productos: MutableList<Articulo>): RecyclerVie
         fun bindItem(i: Articulo){
             Picasso.get().load(i.image).into(imageArticulo)
             titulo.text = i.title
-            price.text = i.price.toString()
+            price.text = i.price.toString() + " €"
 
 
 
@@ -52,6 +53,11 @@ class articuloAdapter(private val productos: MutableList<Articulo>): RecyclerVie
                 }
             }
         }
+    }
+
+    interface OnProductClickListener{
+
+        fun onProductClick(p: Articulo)
     }
 
 
