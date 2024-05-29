@@ -67,7 +67,6 @@ class MainActivity : AppCompatActivity() {
                             .addToBackStack(null)
                             .commit()
                         binding.myToolBar.visibility = View.GONE
-                        binding.bottomNavigationView.visibility = View.GONE
 
                     }else{
                         val nuevoFragmento = LoginFragment()

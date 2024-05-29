@@ -98,6 +98,7 @@
                 android:layout_height="26dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="8dp"
+                android:fontFamily="@font/alfa_slab_one"
                 android:text="Descripción"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btnComprarYa" />
@@ -124,6 +125,7 @@
                 android:id="@+id/textView6"
                 android:layout_width="149dp"
                 android:layout_height="26dp"
+                android:fontFamily="@font/alfa_slab_one"
                 android:layout_marginStart="17dp"
                 android:layout_marginTop="9dp"
                 android:text="Comentarios"

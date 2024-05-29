@@ -113,7 +113,7 @@
         android:layout_height="48dp"
         android:layout_marginStart="107dp"
         android:layout_marginTop="167dp"
-        android:text="INICIO SESION"
+        android:text="INICIO SESIÓN"
         android:textAlignment="center"
         android:textAllCaps="true"
         android:textSize="28sp"
