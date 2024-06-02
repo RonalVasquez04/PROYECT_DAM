@@ -1,5 +1,6 @@
 package es.rfvl.ronal_proyect_dam.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import es.rfvl.ronal_proyect_dam.DataApi.ArticuloService
 import es.rfvl.ronal_proyect_dam.DataApi.RetrofitObject
+import es.rfvl.ronal_proyect_dam.Firebase.FavoritosManager
 import es.rfvl.ronal_proyect_dam.R
 import es.rfvl.ronal_proyect_dam.adapters.articuloAdapter
 import es.rfvl.ronal_proyect_dam.classes.Articulo
@@ -21,11 +23,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class InicioFragment : Fragment() , articuloAdapter.OnProductClickListener{
+class InicioFragment : Fragment() , articuloAdapter.OnProductClickListener , articuloAdapter.OnFavClickListener{
 
     private lateinit var binding: FragmentInicioBinding
     private lateinit var mAdapter: articuloAdapter
     private lateinit var listArticulos: MutableList<Articulo>
+    private lateinit var listArticulosFav: MutableList<String>
 
 
 
@@ -35,14 +38,16 @@ class InicioFragment : Fragment() , articuloAdapter.OnProductClickListener{
     ): View? {
         binding = FragmentInicioBinding.inflate(layoutInflater)
         loadArticles()
+
         setUpRecyclerView()
         return binding.root
     }
 
     private fun setUpRecyclerView() {
         listArticulos = emptyList<Articulo>().toMutableList()
+        listArticulosFav = emptyList<String>().toMutableList()
 
-        mAdapter = articuloAdapter(listArticulos,this)
+        mAdapter = articuloAdapter(listArticulos,this, this,listArticulosFav)
         binding.myRecViewInicio.adapter = mAdapter
         binding.myRecViewInicio.layoutManager = GridLayoutManager(requireContext(),2)
     }
@@ -54,14 +59,26 @@ class InicioFragment : Fragment() , articuloAdapter.OnProductClickListener{
                 val call = RetrofitObject.getInstance().create(ArticuloService::class.java).getListArticles();
                 val response = call.body()
 
+                val prefs = requireActivity().getSharedPreferences(
+                    "es.rfvl.ronal_proyect_dam",
+                    Context.MODE_PRIVATE
+                );
+                val nombre = prefs.getString("signature", "");
+                var productosFavoritos = nombre?.let { FavoritosManager().getProductosFavoritos(it) }!!
+
                 withContext(Dispatchers.Main){
-
-                    if (response != null){
-
-                            for (article in response){
-                                listArticulos.add(Articulo(article.title,article.price,article.image, article.id,article.description,article.category,article.rating.rate,article.rating.count))
-                                mAdapter.notifyDataSetChanged()
+                    if (response != null) {
+                        for (article in response){
+                            if (productosFavoritos != null) {
+                                if (productosFavoritos.contains(article.id.toString())){
+                                    listArticulosFav.add(article.id.toString())
+                                }
                             }
+                        }
+                        for (article in response){
+                            listArticulos.add(Articulo(article.title,article.price,article.image, article.id,article.description,article.category,article.rating.rate,article.rating.count))
+                            mAdapter.notifyDataSetChanged()
+                        }
                     }
                 }
             }
@@ -113,6 +130,20 @@ class InicioFragment : Fragment() , articuloAdapter.OnProductClickListener{
         fragmentTransaction.addToBackStack(null)
 
         fragmentTransaction.commit()
+    }
+
+    override fun onFavClick(p: Articulo, isFavorite: Boolean) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val prefs = requireActivity().getSharedPreferences("es.rfvl.ronal_proyect_dam", Context.MODE_PRIVATE);
+            val nombre = prefs.getString("signature","");
+            if (nombre != null) {
+                if (isFavorite){
+                    FavoritosManager().deleteProductoFavorito(p.id.toString(), nombre)
+                }else{
+                    FavoritosManager().addProductoFavorito(p.id.toString(), nombre)
+                }
+            }
+        }
     }
 
 

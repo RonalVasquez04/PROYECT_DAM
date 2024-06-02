@@ -72,7 +72,7 @@
         android:layout_width="241dp"
         android:layout_height="105dp"
         android:layout_marginStart="11dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="6dp"
         android:text="TextView"
         app:layout_constraintStart_toEndOf="@+id/imageView7"
         app:layout_constraintTop_toBottomOf="@+id/textView10" />
@@ -99,15 +99,22 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recViewMisCompras"
-        android:layout_width="380dp"
-        android:layout_height="451dp"
-        android:layout_marginStart="16dp"
-        android:foreground="@drawable/fondoazul"
+        android:layout_width="411dp"
+        android:layout_height="444dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView6"
         app:layout_constraintVertical_bias="0.0" />
 
+    <Button
+        android:id="@+id/btnEditar"
+        android:layout_width="85dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="78dp"
+        android:text="Editar"
+        android:textSize="10dp"
+        app:layout_constraintStart_toEndOf="@+id/textView10"
+        app:layout_constraintTop_toBottomOf="@+id/btnCerrarSesion" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

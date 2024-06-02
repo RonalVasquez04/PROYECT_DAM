@@ -6,98 +6,80 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import es.rfvl.ronal_proyect_dam.DataApi.ArticuloService
 import es.rfvl.ronal_proyect_dam.DataApi.RetrofitObject
-import es.rfvl.ronal_proyect_dam.Firebase.CompradosManager
 import es.rfvl.ronal_proyect_dam.Firebase.FavoritosManager
 import es.rfvl.ronal_proyect_dam.R
 import es.rfvl.ronal_proyect_dam.adapters.articuloAdapter
+import es.rfvl.ronal_proyect_dam.adapters.articuloFavAdapter
 import es.rfvl.ronal_proyect_dam.classes.Articulo
-import es.rfvl.ronal_proyect_dam.databinding.FragmentProfileBinding
+import es.rfvl.ronal_proyect_dam.databinding.FragmentFavoritosBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+class MisFavoritosFragment : Fragment()  , articuloFavAdapter.OnProductFavClickListener, articuloFavAdapter.OnDeleteClickListener{
 
-class ProfileFragment : Fragment() , articuloAdapter.OnProductClickListener , articuloAdapter.OnFavClickListener{
-
-    private lateinit var binding: FragmentProfileBinding
-    private lateinit var mAdapter: articuloAdapter
+    private lateinit var binding: FragmentFavoritosBinding
+    private lateinit var mAdapter: articuloFavAdapter
     private lateinit var listArticulos: MutableList<Articulo>
-    private lateinit var listArticulosFav: MutableList<String>
-
+    private lateinit var productosFavoritos: MutableList<String>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentProfileBinding.inflate(layoutInflater)
-
-        binding.btnCerrarSesion.setOnClickListener {
-            cerrarSesion()
-        }
+        binding = FragmentFavoritosBinding.inflate(layoutInflater)
         loadArticles()
+
         setUpRecyclerView()
         return binding.root
     }
 
     private fun setUpRecyclerView() {
         listArticulos = emptyList<Articulo>().toMutableList()
-        listArticulosFav = emptyList<String>().toMutableList()
 
-        mAdapter = articuloAdapter(listArticulos,this, this, listArticulosFav)
-        binding.recViewMisCompras.adapter = mAdapter
-        binding.recViewMisCompras.layoutManager = GridLayoutManager(requireContext(),2)
+        mAdapter = articuloFavAdapter(listArticulos,this, this)
+        binding.recyclerFav.adapter = mAdapter
+        binding.recyclerFav.layoutManager = LinearLayoutManager(requireContext(),
+            LinearLayoutManager.VERTICAL,false)
     }
-
     private fun loadArticles(){
-
         lifecycleScope.launch(Dispatchers.IO) {
-            val prefs = requireActivity().getSharedPreferences(
-                "es.rfvl.ronal_proyect_dam",
-                Context.MODE_PRIVATE
-            );
-            val nombre = prefs.getString("signature", "");
-            var productosFavoritos = nombre?.let { FavoritosManager().getProductosFavoritos(it) }!!
-            val productosComprados = nombre?.let { CompradosManager().getProductosComprados(it) }
+            val prefs = requireActivity().getSharedPreferences("es.rfvl.ronal_proyect_dam", Context.MODE_PRIVATE);
+            val nombre = prefs.getString("signature","");
+            productosFavoritos = nombre?.let { FavoritosManager().getProductosFavoritos(it) }!!
+
             val call = RetrofitObject.getInstance().create(ArticuloService::class.java).getListArticles();
             val response = call.body()
 
             withContext(Dispatchers.Main){
-
+                if (productosFavoritos.isNullOrEmpty()) {
+                    binding.textNoFavoritos.visibility = View.VISIBLE
+                }
                 if (response != null){
+
                     for (article in response){
                         if (productosFavoritos != null) {
                             if (productosFavoritos.contains(article.id.toString())){
-                                listArticulosFav.add(article.id.toString())
-                            }
-                        }
-                    }
-                    for (article in response){
-                        if (productosComprados != null) {
-                            if (productosComprados.contains(article.id.toString())){
                                 listArticulos.add(Articulo(article.title,article.price,article.image, article.id,article.description,article.category,article.rating.rate,article.rating.count))
                             }
                         }
                         mAdapter.notifyDataSetChanged()
                     }
                 }
+
             }
         }
     }
 
-    private fun cerrarSesion(){
-        val prefs = requireActivity().getSharedPreferences("es.rfvl.ronal_proyect_dam", Context.MODE_PRIVATE);
-        with(prefs.edit()){
-            putString("signature","")
-            putBoolean("syncLogin",false)
-            apply()
-        }
-        fragmentManager?.popBackStack()
-    }
 
-    override fun onProductClick(d: Articulo) {
+    override fun onProductFavClick(d: Articulo) {
         val nuevoFragmento = DetailProductFragment()
         val args = Bundle()
 
@@ -120,20 +102,41 @@ class ProfileFragment : Fragment() , articuloAdapter.OnProductClickListener , ar
         fragmentTransaction.commit()
     }
 
-    override fun onFavClick(p: Articulo, isFavorite: Boolean) {
+
+    override fun onResume() {
+        super.onResume()
+
+        val activity = requireActivity() as AppCompatActivity
+        activity.supportActionBar?.show() // Asegúrate de que la ActionBar esté visible
+
+        val toolbar = activity.findViewById<androidx.appcompat.widget.Toolbar>(R.id.myToolBar)
+        if (toolbar.visibility != View.VISIBLE) {
+            toolbar.visibility = View.VISIBLE // Si la Toolbar no está visible, hazla visible
+        }
+        activity?.supportActionBar?.show()
+        activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationView)?.visibility = View.VISIBLE
+
+
+        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+
+                activity.supportFragmentManager.popBackStack()
+
+            }
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
+    }
+
+    override fun onDeleteFavClick(p: Articulo) {
         lifecycleScope.launch(Dispatchers.IO) {
             val prefs = requireActivity().getSharedPreferences("es.rfvl.ronal_proyect_dam", Context.MODE_PRIVATE);
             val nombre = prefs.getString("signature","");
             if (nombre != null) {
-                if (isFavorite){
                     FavoritosManager().deleteProductoFavorito(p.id.toString(), nombre)
-                }else{
-                    FavoritosManager().addProductoFavorito(p.id.toString(), nombre)
-                }
             }
 
 
         }
     }
-
 }

@@ -1,15 +1,13 @@
 package es.rfvl.ronal_proyect_dam
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import es.rfvl.ronal_proyect_dam.databinding.ActivityMainBinding
-import es.rfvl.ronal_proyect_dam.fragments.DetailProductFragment
 import es.rfvl.ronal_proyect_dam.fragments.InicioFragment
 import es.rfvl.ronal_proyect_dam.fragments.LoginFragment
-import es.rfvl.ronal_proyect_dam.fragments.MisComprasFragment
+import es.rfvl.ronal_proyect_dam.fragments.MisFavoritosFragment
 import es.rfvl.ronal_proyect_dam.fragments.ProfileFragment
 import es.rfvl.ronal_proyect_dam.fragments.SearchFragment
 
@@ -94,7 +92,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.bnvShop -> {
-                    val nuevoFragmento = MisComprasFragment()
+                    val nuevoFragmento = MisFavoritosFragment()
                     this.supportFragmentManager.beginTransaction()
                         .replace(R.id.fragmentContainerViewMAIN, nuevoFragmento)
                         .addToBackStack(null)

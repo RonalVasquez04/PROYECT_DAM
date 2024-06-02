@@ -1,22 +1,30 @@
 package es.rfvl.ronal_proyect_dam.adapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
+import es.rfvl.ronal_proyect_dam.Firebase.FavoritosManager
 import es.rfvl.ronal_proyect_dam.R
 import es.rfvl.ronal_proyect_dam.classes.Articulo
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class articuloAdapter(private val productos: MutableList<Articulo>,private val mListener: OnProductClickListener): RecyclerView.Adapter<articuloAdapter.ArticulosViewFolder>() {
+class articuloAdapter(private val productos: MutableList<Articulo>,private val mListener: OnProductClickListener,private val favListener: OnFavClickListener, private val listaFav: MutableList<String>): RecyclerView.Adapter<articuloAdapter.ArticulosViewFolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
+
     ): ArticulosViewFolder {
+
         val view = LayoutInflater.from(parent.context).inflate(R.layout.rec_articulo, parent, false)
-        return ArticulosViewFolder(view)
+
+        return ArticulosViewFolder(view, favListener, listaFav)
     }
 
     override fun onBindViewHolder(holder: articuloAdapter.ArticulosViewFolder, position: Int) {
@@ -29,7 +37,7 @@ class articuloAdapter(private val productos: MutableList<Articulo>,private val m
         return  productos.size
     }
 
-    class ArticulosViewFolder(view: View): RecyclerView.ViewHolder(view){
+    class ArticulosViewFolder(view: View, private val favListener: OnFavClickListener, private val listaFav: MutableList<String>): RecyclerView.ViewHolder(view){
         private val imageArticulo: ImageView = view.findViewById(R.id.imageArticuloInicio)
         private val titulo: TextView = view.findViewById(R.id.textNombreArticuloInicio)
         private val price: TextView = view.findViewById(R.id.precioArticuloInicio)
@@ -40,17 +48,21 @@ class articuloAdapter(private val productos: MutableList<Articulo>,private val m
             titulo.text = i.title
             price.text = i.price.toString() + " €"
 
-
+            if (listaFav.contains(i.id.toString())){
+                btnGuardarfavoritos.setImageResource(R.drawable.guardado)
+            }else{
+                btnGuardarfavoritos.setImageResource(R.drawable.noguardado)
+            }
 
             btnGuardarfavoritos.setOnClickListener {
-                val currentDrawable = btnGuardarfavoritos.drawable?.constantState
-
-                if (currentDrawable == itemView.context.getDrawable(R.drawable.noguardado)?.constantState) {
-                    btnGuardarfavoritos.setImageResource(R.drawable.guardado)
-
-                }else{
+                if (listaFav.contains(i.id.toString())){
+                    favListener.onFavClick(i,true)
                     btnGuardarfavoritos.setImageResource(R.drawable.noguardado)
+                }else{
+                    favListener.onFavClick(i,false)
+                    btnGuardarfavoritos.setImageResource(R.drawable.guardado)
                 }
+
             }
         }
     }
@@ -60,5 +72,8 @@ class articuloAdapter(private val productos: MutableList<Articulo>,private val m
         fun onProductClick(p: Articulo)
     }
 
+    interface OnFavClickListener {
+        fun onFavClick(p: Articulo, isFavorite: Boolean)
+    }
 
 }
