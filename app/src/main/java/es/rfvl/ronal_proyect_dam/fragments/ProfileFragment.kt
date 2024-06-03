@@ -33,9 +33,28 @@ class ProfileFragment : Fragment() , articuloAdapter.OnProductClickListener , ar
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentProfileBinding.inflate(layoutInflater)
-
+        val prefs = requireActivity().getSharedPreferences("es.rfvl.ronal_proyect_dam", Context.MODE_PRIVATE);
+        val direccion = prefs.getString("dirección","");
+        binding.textDireccion.setText(direccion)
         binding.btnCerrarSesion.setOnClickListener {
             cerrarSesion()
+        }
+        binding.btnEditar.setOnClickListener {
+            binding.btnGuardarDireccion.visibility = View.VISIBLE
+            binding.textDireccion.isEnabled = true
+
+            editar()
+        }
+        binding.btnGuardarDireccion.setOnClickListener {
+            binding.btnGuardarDireccion.visibility = View.GONE
+            val prefs = requireActivity().getSharedPreferences("es.rfvl.ronal_proyect_dam", Context.MODE_PRIVATE);
+            val nombre = prefs.getString("signature","");
+            with(prefs.edit()){
+                putString("dirección",binding.textDireccion.text.toString())
+                apply()
+            }
+            binding.textDireccion.isEnabled = false
+
         }
         loadArticles()
         setUpRecyclerView()
@@ -135,5 +154,7 @@ class ProfileFragment : Fragment() , articuloAdapter.OnProductClickListener , ar
 
         }
     }
+    fun editar(){
 
+    }
 }

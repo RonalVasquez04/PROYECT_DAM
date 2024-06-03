@@ -1,5 +1,6 @@
 package es.rfvl.ronal_proyect_dam.Firebase
 
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
@@ -31,4 +32,25 @@ class CompradosManager {
 
         return datos
     }
+
+    suspend fun addProductoComprado(id: String, usuario: String){
+
+        try {
+            val subcoleccion = myDBComprados.collection("comprados").get().await()
+
+            for (document in subcoleccion.documents) {
+                val subcoleccionUsuarioFav = document.reference.collection("usuario_$usuario")
+                val subcoleccionSnapshot = subcoleccionUsuarioFav.get().await()
+
+                subcoleccionUsuarioFav.add(mapOf(
+                    "idProducto" to id
+                ))
+
+            }
+        } catch (e: Exception) {
+            println("Error al agregar producto a comprados: ${e.message}")
+        }
+
+    }
+
 }

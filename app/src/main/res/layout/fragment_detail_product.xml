@@ -15,6 +15,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingBottom="10dp
+"
             android:orientation="horizontal">
 
 
@@ -114,8 +116,9 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="372dp"
-                android:layout_height="245dp"
+                android:id="@+id/recComentarios"
+                android:layout_width="369dp"
+                android:layout_height="355dp"
                 android:layout_marginStart="19dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -131,6 +134,31 @@
                 android:text="Comentarios"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textDescripcion" />
+
+            <EditText
+                android:id="@+id/messageEditText"
+                android:layout_width="314dp"
+                android:layout_height="43dp"
+                android:layout_marginStart="19dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/redondeado"
+                android:hint="Write a message..."
+                android:inputType="textMultiLine|textAutoCorrect|textCapSentences"
+                android:maxLines="5"
+                android:padding="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/recComentarios"></EditText>
+
+            <Button
+                android:id="@+id/sendButton"
+                android:layout_width="52dp"
+                android:layout_height="55dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="-4dp"
+                android:background="@drawable/send_icon"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
 
             <!-- Agregar más vistas según sea necesario -->

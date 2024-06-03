@@ -10,8 +10,8 @@ import es.rfvl.ronal_proyect_dam.R
 import es.rfvl.ronal_proyect_dam.classes.Articulo
 import es.rfvl.ronal_proyect_dam.fragments.SearchFragment
 
-class CategoriesAdapter(private val categories: List<String>, private val mListener: OnCategoryClickListener) :
-    RecyclerView.Adapter<CategoriesAdapter.CategoryViewHolder>() {
+class categoriesAdapter(private val categories: List<String>, private val mListener: OnCategoryClickListener) :
+    RecyclerView.Adapter<categoriesAdapter.CategoryViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.rec_categories, parent, false)

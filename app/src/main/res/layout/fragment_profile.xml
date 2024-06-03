@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".fragments.ProfileFragment">
 
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/textDireccion"
+        android:layout_width="231dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="12dp"
+        android:hint="DIrección"
+        android:enabled="false"
+        app:layout_constraintStart_toEndOf="@+id/imageView7"
+        app:layout_constraintTop_toBottomOf="@+id/btnEditar" />
+
     <ImageView
         android:id="@+id/imageView7"
         android:layout_width="128dp"
@@ -27,21 +37,13 @@
 
     <TextView
         android:id="@+id/textoNombreUsuario"
-        android:layout_width="183dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="16dp"
-        android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/textView7"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="34dp"
+        android:layout_width="218dp"
         android:layout_height="24dp"
         android:layout_marginStart="22dp"
         android:layout_marginTop="16dp"
-        android:text="Hola, "
+        android:text="TU PERFIL"
+        android:textAlignment="center"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -50,12 +52,12 @@
         android:layout_width="110dp"
         android:layout_height="43dp"
         android:layout_marginStart="2dp"
-        android:layout_marginTop="13dp"
+        android:layout_marginTop="14dp"
         android:fontFamily="@font/archivo_black"
         android:gravity="center"
         android:text="Mis compras"
         app:layout_constraintStart_toEndOf="@+id/imageView4"
-        app:layout_constraintTop_toBottomOf="@+id/textDireccion" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView7" />
 
     <TextView
         android:id="@+id/textView10"
@@ -64,18 +66,9 @@
         android:layout_marginStart="11dp"
         android:layout_marginTop="17dp"
         android:text="Dirección"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/imageView7"
         app:layout_constraintTop_toBottomOf="@+id/textoNombreUsuario" />
-
-    <TextView
-        android:id="@+id/textDireccion"
-        android:layout_width="241dp"
-        android:layout_height="105dp"
-        android:layout_marginStart="11dp"
-        android:layout_marginTop="6dp"
-        android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/imageView7"
-        app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
     <ImageView
         android:id="@+id/imageView4"
@@ -112,6 +105,17 @@
         android:layout_height="35dp"
         android:layout_marginStart="78dp"
         android:text="Editar"
+        android:textSize="10dp"
+        app:layout_constraintStart_toEndOf="@+id/textView10"
+        app:layout_constraintTop_toBottomOf="@+id/btnCerrarSesion" />
+
+    <Button
+        android:id="@+id/btnGuardarDireccion"
+        android:layout_width="85dp"
+        android:layout_height="35dp"
+        android:visibility="invisible"
+        android:layout_marginStart="78dp"
+        android:text="Guardar"
         android:textSize="10dp"
         app:layout_constraintStart_toEndOf="@+id/textView10"
         app:layout_constraintTop_toBottomOf="@+id/btnCerrarSesion" />

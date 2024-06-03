@@ -13,17 +13,17 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import es.rfvl.ronal_proyect_dam.DataApi.ArticuloCategories
 import es.rfvl.ronal_proyect_dam.DataApi.RetrofitObject
 import es.rfvl.ronal_proyect_dam.R
-import es.rfvl.ronal_proyect_dam.adapters.CategoriesAdapter
+import es.rfvl.ronal_proyect_dam.adapters.categoriesAdapter
 import es.rfvl.ronal_proyect_dam.classes.Articulo
 import es.rfvl.ronal_proyect_dam.databinding.FragmentSearchBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class SearchFragment : Fragment() , CategoriesAdapter.OnCategoryClickListener{
+class SearchFragment : Fragment() , categoriesAdapter.OnCategoryClickListener{
 
     private lateinit var binding: FragmentSearchBinding
-    private lateinit var mAdapter: CategoriesAdapter
+    private lateinit var mAdapter: categoriesAdapter
     private lateinit var listCategories: MutableList<String>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,7 +57,7 @@ class SearchFragment : Fragment() , CategoriesAdapter.OnCategoryClickListener{
     private fun setUpRecyclerView() {
         listCategories = emptyList<String>().toMutableList()
 
-        mAdapter = CategoriesAdapter(listCategories, this)
+        mAdapter = categoriesAdapter(listCategories, this)
         binding.recCategories.adapter = mAdapter
         binding.recCategories.layoutManager = GridLayoutManager(requireContext(),2)
     }
