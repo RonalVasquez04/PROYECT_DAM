@@ -14,6 +14,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import es.rfvl.ronal_proyect_dam.DataApi.ArticuloService
 import es.rfvl.ronal_proyect_dam.DataApi.RetrofitObject
 import es.rfvl.ronal_proyect_dam.Firebase.FavoritosManager
+import es.rfvl.ronal_proyect_dam.MainActivity
 import es.rfvl.ronal_proyect_dam.R
 import es.rfvl.ronal_proyect_dam.adapters.articuloAdapter
 import es.rfvl.ronal_proyect_dam.classes.Articulo
@@ -37,6 +38,8 @@ class InicioFragment : Fragment() , articuloAdapter.OnProductClickListener , art
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentInicioBinding.inflate(layoutInflater)
+        val activity = requireActivity() as MainActivity
+        activity.selectBottomNavItem(R.id.bnvPrincipal)
         loadArticles()
 
         setUpRecyclerView()
@@ -87,7 +90,7 @@ class InicioFragment : Fragment() , articuloAdapter.OnProductClickListener , art
     override fun onResume() {
         super.onResume()
 
-        val activity = requireActivity() as AppCompatActivity
+        val activity = requireActivity() as MainActivity
         activity.supportActionBar?.show() // Asegúrate de que la ActionBar esté visible
 
         val toolbar = activity.findViewById<androidx.appcompat.widget.Toolbar>(R.id.myToolBar)

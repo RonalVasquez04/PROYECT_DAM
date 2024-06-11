@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <stroke android:width="1dp" android:color="#000000"/> <!-- Define el ancho y el color del borde aquí -->
     <corners android:radius="20dp"/>
-    <solid android:color="#3366FF"/>
+    <padding android:left="15dp"/>
+    <solid android:color="#FFF8C9C9"/>
+
 </shape>

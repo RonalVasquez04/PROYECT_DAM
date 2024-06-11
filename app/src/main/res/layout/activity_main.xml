@@ -31,11 +31,11 @@
                 android:layout_height="47dp"
                 android:background="@android:color/transparent"
                 android:hint="¿Buscabas algo?"
-                android:scrollHorizontally="true"
                 android:inputType="text"
+                android:scrollHorizontally="true"
+                android:textColor="#F1B9B9"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-            </EditText>
+                app:layout_constraintTop_toTopOf="parent"></EditText>
 
             <Button
                 android:id="@+id/button"

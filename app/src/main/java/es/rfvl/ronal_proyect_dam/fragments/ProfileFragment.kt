@@ -6,12 +6,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import es.rfvl.ronal_proyect_dam.DataApi.ArticuloService
 import es.rfvl.ronal_proyect_dam.DataApi.RetrofitObject
 import es.rfvl.ronal_proyect_dam.Firebase.CompradosManager
 import es.rfvl.ronal_proyect_dam.Firebase.FavoritosManager
+import es.rfvl.ronal_proyect_dam.MainActivity
 import es.rfvl.ronal_proyect_dam.R
 import es.rfvl.ronal_proyect_dam.adapters.articuloAdapter
 import es.rfvl.ronal_proyect_dam.classes.Articulo
@@ -27,12 +31,15 @@ class ProfileFragment : Fragment() , articuloAdapter.OnProductClickListener , ar
     private lateinit var mAdapter: articuloAdapter
     private lateinit var listArticulos: MutableList<Articulo>
     private lateinit var listArticulosFav: MutableList<String>
+    private lateinit var mListener: FragmentLogoutListener
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentProfileBinding.inflate(layoutInflater)
+        val activity = requireActivity() as MainActivity
+        activity.selectBottomNavItem(R.id.bnvUser)
         val prefs = requireActivity().getSharedPreferences("es.rfvl.ronal_proyect_dam", Context.MODE_PRIVATE);
         val direccion = prefs.getString("dirección","");
         binding.textDireccion.setText(direccion)
@@ -113,7 +120,10 @@ class ProfileFragment : Fragment() , articuloAdapter.OnProductClickListener , ar
             putBoolean("syncLogin",false)
             apply()
         }
-        fragmentManager?.popBackStack()
+
+        mListener.onLogOutListener()
+
+
     }
 
     override fun onProductClick(d: Articulo) {
@@ -156,5 +166,18 @@ class ProfileFragment : Fragment() , articuloAdapter.OnProductClickListener , ar
     }
     fun editar(){
 
+    }
+
+    interface FragmentLogoutListener{
+        fun onLogOutListener()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentLogoutListener){
+            mListener = context
+        }else{
+            throw Exception("EEROR")
+        }
     }
 }

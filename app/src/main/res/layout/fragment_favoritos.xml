@@ -11,10 +11,10 @@
         android:id="@+id/textNoFavoritos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="140dp"
+        android:layout_marginStart="104dp"
         android:layout_marginTop="336dp"
-        android:visibility="invisible"
         android:text="No tiene productos en el carrito"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

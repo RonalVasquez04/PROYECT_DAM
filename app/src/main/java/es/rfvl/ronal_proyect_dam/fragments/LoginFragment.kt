@@ -25,6 +25,7 @@ import kotlinx.coroutines.withContext
 class LoginFragment : Fragment() {
 
     private lateinit var binding: FragmentLoginBinding
+    private lateinit var mListener: FragmentLoginListener
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,12 +39,6 @@ class LoginFragment : Fragment() {
 
         binding.btnIniciarSesion.setOnClickListener {
             login()
-        }
-        binding.backLogin.setOnClickListener {
-            fragmentManager?.popBackStack()
-            val activity = requireActivity() as AppCompatActivity
-            activity?.supportActionBar?.show()
-            activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationView)?.visibility = View.VISIBLE
         }
 
         binding.btnRecuperarContrasenya.setOnClickListener {
@@ -84,12 +79,8 @@ class LoginFragment : Fragment() {
                                 //putBoolean("syncCheck", false)
                                 apply()
                             }
-                            val nuevoFragmento = ProfileFragment()
-                            val fragmentManager = requireActivity().supportFragmentManager
-                            val fragmentTransaction = fragmentManager.beginTransaction()
-                            fragmentTransaction.replace(R.id.fragmentContainerViewMAIN, nuevoFragmento)
-                            fragmentTransaction.addToBackStack(null)
-                            fragmentTransaction.commit()
+
+                            mListener.onLoginClicked()
 
                             Toast.makeText(requireContext(), "INICO DE SESIÓN CORRECTO", Toast.LENGTH_LONG).show()
 
@@ -112,7 +103,7 @@ class LoginFragment : Fragment() {
         val nuevoFragmento = ResetPasswordFragment()
         val fragmentManager = requireActivity().supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.fragmentContainerViewMAIN, nuevoFragmento)
+        fragmentTransaction.replace(R.id.fragmentcontainerviewLogin, nuevoFragmento)
         fragmentTransaction.addToBackStack(null)
 
         fragmentTransaction.commit()
@@ -122,10 +113,24 @@ class LoginFragment : Fragment() {
         val nuevoFragmento = RegisterFragment()
         val fragmentManager = requireActivity().supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.fragmentContainerViewMAIN, nuevoFragmento)
+        fragmentTransaction.replace(R.id.fragmentcontainerviewLogin, nuevoFragmento)
         fragmentTransaction.addToBackStack(null)
 
         fragmentTransaction.commit()
+    }
+
+    interface FragmentLoginListener{
+        fun onLoginClicked()
+
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentLoginListener){
+            mListener = context
+        }else{
+            throw Exception("EEROR")
+        }
     }
 
 

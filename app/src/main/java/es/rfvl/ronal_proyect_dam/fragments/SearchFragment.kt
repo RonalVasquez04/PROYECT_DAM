@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import es.rfvl.ronal_proyect_dam.DataApi.ArticuloCategories
 import es.rfvl.ronal_proyect_dam.DataApi.RetrofitObject
+import es.rfvl.ronal_proyect_dam.MainActivity
 import es.rfvl.ronal_proyect_dam.R
 import es.rfvl.ronal_proyect_dam.adapters.categoriesAdapter
 import es.rfvl.ronal_proyect_dam.classes.Articulo
@@ -31,6 +32,8 @@ class SearchFragment : Fragment() , categoriesAdapter.OnCategoryClickListener{
     ): View? {
         binding = FragmentSearchBinding.inflate(layoutInflater)
         loadData()
+        val activity = requireActivity() as MainActivity
+        activity.selectBottomNavItem(R.id.bnvSearch)
         setUpRecyclerView()
         return binding.root
     }
@@ -83,7 +86,7 @@ class SearchFragment : Fragment() , categoriesAdapter.OnCategoryClickListener{
 
             }
         }
-
+        //(activity as MainActivity).selectBottomNavItem(R.id.bnvSearch)
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
     }
 

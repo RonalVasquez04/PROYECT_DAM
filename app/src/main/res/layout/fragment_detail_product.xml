@@ -142,6 +142,7 @@
                 android:layout_marginStart="19dp"
                 android:layout_marginTop="10dp"
                 android:layout_weight="1"
+
                 android:background="@drawable/redondeado"
                 android:hint="Write a message..."
                 android:inputType="textMultiLine|textAutoCorrect|textCapSentences"

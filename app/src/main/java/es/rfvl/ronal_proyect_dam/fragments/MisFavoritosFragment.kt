@@ -15,6 +15,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import es.rfvl.ronal_proyect_dam.DataApi.ArticuloService
 import es.rfvl.ronal_proyect_dam.DataApi.RetrofitObject
 import es.rfvl.ronal_proyect_dam.Firebase.FavoritosManager
+import es.rfvl.ronal_proyect_dam.MainActivity
 import es.rfvl.ronal_proyect_dam.R
 import es.rfvl.ronal_proyect_dam.adapters.articuloAdapter
 import es.rfvl.ronal_proyect_dam.adapters.articuloFavAdapter
@@ -36,7 +37,8 @@ class MisFavoritosFragment : Fragment()  , articuloFavAdapter.OnProductFavClickL
     ): View? {
         binding = FragmentFavoritosBinding.inflate(layoutInflater)
         loadArticles()
-
+        val activity = requireActivity() as MainActivity
+        activity.selectBottomNavItem(R.id.bnvShop)
         setUpRecyclerView()
         return binding.root
     }
@@ -124,7 +126,7 @@ class MisFavoritosFragment : Fragment()  , articuloFavAdapter.OnProductFavClickL
 
             }
         }
-
+        //(activity as MainActivity).selectBottomNavItem(R.id.bnvShop)
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, onBackPressedCallback)
     }
 
