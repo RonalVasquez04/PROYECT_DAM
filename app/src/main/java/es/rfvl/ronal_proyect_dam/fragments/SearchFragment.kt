@@ -91,7 +91,19 @@ class SearchFragment : Fragment() , categoriesAdapter.OnCategoryClickListener{
     }
 
     override fun onCategoryClick(p: String) {
-        TODO("Not yet implemented")
+        val nuevoFragmento = BusquedaFragment()
+        val args = Bundle()
+
+        args.putString("nombreCategoria", p)
+        nuevoFragmento.arguments = args
+
+        val fragmentManager = requireActivity().supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+
+        fragmentTransaction.replace(R.id.fragmentContainerViewMAIN, nuevoFragmento)
+        fragmentTransaction.addToBackStack(null)
+
+        fragmentTransaction.commit()
     }
 
 }

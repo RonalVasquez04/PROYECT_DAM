@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -31,11 +32,15 @@ class MisFavoritosFragment : Fragment()  , articuloFavAdapter.OnProductFavClickL
     private lateinit var mAdapter: articuloFavAdapter
     private lateinit var listArticulos: MutableList<Articulo>
     private lateinit var productosFavoritos: MutableList<String>
+    private val selectedArticles = mutableListOf<Articulo>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentFavoritosBinding.inflate(layoutInflater)
+        binding.btnComprar.setOnClickListener {
+            Toast.makeText(requireContext(),selectedArticles.size.toString(), Toast.LENGTH_SHORT).show()
+        }
         loadArticles()
         val activity = requireActivity() as MainActivity
         activity.selectBottomNavItem(R.id.bnvShop)
@@ -46,7 +51,13 @@ class MisFavoritosFragment : Fragment()  , articuloFavAdapter.OnProductFavClickL
     private fun setUpRecyclerView() {
         listArticulos = emptyList<Articulo>().toMutableList()
 
-        mAdapter = articuloFavAdapter(listArticulos,this, this)
+        mAdapter = articuloFavAdapter(listArticulos, this, this) { articulo, isSelected ->
+            if (isSelected) {
+                selectedArticles.add(articulo)
+            } else {
+                selectedArticles.remove(articulo)
+            }
+        }
         binding.recyclerFav.adapter = mAdapter
         binding.recyclerFav.layoutManager = LinearLayoutManager(requireContext(),
             LinearLayoutManager.VERTICAL,false)
