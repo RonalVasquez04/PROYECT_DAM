@@ -1,8 +1,13 @@
 package es.rfvl.ronal_proyect_dam.Firebase
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.QuerySnapshot
 import es.rfvl.ronal_proyect_dam.classes.Articulo
+import es.rfvl.ronal_proyect_dam.classes.Comentario
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
 class FavoritosManager {
@@ -32,6 +37,38 @@ class FavoritosManager {
         }
 
         return datos
+    }
+
+    suspend fun getProductosFavFlow(usuario: String): Flow<List<String>> = callbackFlow {
+        val listenerRegistrations = mutableListOf<ListenerRegistration>()
+
+        try {
+            val subcoleccion = myDBFavoritos.collection("favoritos").get().await()
+
+            for (document in subcoleccion.documents) {
+                val subcoleccionUsuarioFav = document.reference.collection("usuariofav_$usuario")
+
+                val registration = subcoleccionUsuarioFav.addSnapshotListener { snapshot, _ ->
+                    if (snapshot != null) {
+                        val datos = mutableListOf<String>()
+                        for (subdocument in snapshot.documents) {
+                            val idProducto = subdocument.getString("idProducto")
+                            if (idProducto != null) {
+                                datos.add(idProducto)
+                            }
+                        }
+                        trySend(datos).isSuccess
+                    }
+                }
+                listenerRegistrations.add(registration)
+            }
+
+            awaitClose {
+                listenerRegistrations.forEach { it.remove() }
+            }
+        } catch (e: Throwable) {
+            close(e)
+        }
     }
 
     suspend fun addProductoFavorito(id: String, usuario: String){

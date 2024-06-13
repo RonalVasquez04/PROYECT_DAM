@@ -1,5 +1,7 @@
 package es.rfvl.ronal_proyect_dam.adapters
 
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -66,6 +68,7 @@ class articuloFavAdapter(private val productos: MutableList<Articulo>,private va
             }
         }
     }
+
 
     interface OnProductFavClickListener{
 

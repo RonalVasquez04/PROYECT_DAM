@@ -15,12 +15,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import es.rfvl.ronal_proyect_dam.DataApi.ArticuloService
 import es.rfvl.ronal_proyect_dam.DataApi.RetrofitObject
+import es.rfvl.ronal_proyect_dam.Firebase.ComentariosManager
+import es.rfvl.ronal_proyect_dam.Firebase.CompradosManager
 import es.rfvl.ronal_proyect_dam.Firebase.FavoritosManager
 import es.rfvl.ronal_proyect_dam.MainActivity
 import es.rfvl.ronal_proyect_dam.R
 import es.rfvl.ronal_proyect_dam.adapters.articuloAdapter
 import es.rfvl.ronal_proyect_dam.adapters.articuloFavAdapter
 import es.rfvl.ronal_proyect_dam.classes.Articulo
+import es.rfvl.ronal_proyect_dam.classes.Comentario
 import es.rfvl.ronal_proyect_dam.databinding.FragmentFavoritosBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,7 +34,7 @@ class MisFavoritosFragment : Fragment()  , articuloFavAdapter.OnProductFavClickL
     private lateinit var binding: FragmentFavoritosBinding
     private lateinit var mAdapter: articuloFavAdapter
     private lateinit var listArticulos: MutableList<Articulo>
-    private lateinit var productosFavoritos: MutableList<String>
+    private var productosFavoritos = mutableListOf<String>()
     private val selectedArticles = mutableListOf<Articulo>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,17 +42,45 @@ class MisFavoritosFragment : Fragment()  , articuloFavAdapter.OnProductFavClickL
     ): View? {
         binding = FragmentFavoritosBinding.inflate(layoutInflater)
         binding.btnComprar.setOnClickListener {
-            Toast.makeText(requireContext(),selectedArticles.size.toString(), Toast.LENGTH_SHORT).show()
+            comprar()
         }
-        loadArticles()
+        val prefs = requireActivity().getSharedPreferences("es.rfvl.ronal_proyect_dam", Context.MODE_PRIVATE);
+        val nombre = prefs.getString("signature","");
+        //loadArticles()
         val activity = requireActivity() as MainActivity
         activity.selectBottomNavItem(R.id.bnvShop)
-        setUpRecyclerView()
+        if (nombre != null) {
+            setUpRecyclerView(nombre)
+        }
         return binding.root
     }
 
-    private fun setUpRecyclerView() {
+    private fun setUpRecyclerView(usuario: String) {
         listArticulos = emptyList<Articulo>().toMutableList()
+        lifecycleScope.launch(Dispatchers.IO) {
+            FavoritosManager().getProductosFavFlow(usuario).collect { productosFavoritos ->
+                val call = RetrofitObject.getInstance().create(ArticuloService::class.java).getListArticles()
+                val response = call.body()
+
+                withContext(Dispatchers.Main) {
+                    if (productosFavoritos.isNullOrEmpty()) {
+                        binding.textNoFavoritos.visibility = View.VISIBLE
+                    } else {
+                        binding.textNoFavoritos.visibility = View.GONE
+                    }
+
+                    if (response != null) {
+                        listArticulos.clear() // Limpiar la lista antes de agregar nuevos artículos
+                        for (article in response) {
+                            if (productosFavoritos.contains(article.id.toString())) {
+                                listArticulos.add(Articulo(article.title, article.price, article.image, article.id, article.description, article.category, article.rating.rate, article.rating.count))
+                            }
+                        }
+                        mAdapter.notifyDataSetChanged()
+                    }
+                }
+            }
+        }
 
         mAdapter = articuloFavAdapter(listArticulos, this, this) { articulo, isSelected ->
             if (isSelected) {
@@ -59,9 +90,9 @@ class MisFavoritosFragment : Fragment()  , articuloFavAdapter.OnProductFavClickL
             }
         }
         binding.recyclerFav.adapter = mAdapter
-        binding.recyclerFav.layoutManager = LinearLayoutManager(requireContext(),
-            LinearLayoutManager.VERTICAL,false)
+        binding.recyclerFav.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
     }
+
     private fun loadArticles(){
         lifecycleScope.launch(Dispatchers.IO) {
             val prefs = requireActivity().getSharedPreferences("es.rfvl.ronal_proyect_dam", Context.MODE_PRIVATE);
@@ -150,6 +181,19 @@ class MisFavoritosFragment : Fragment()  , articuloFavAdapter.OnProductFavClickL
             }
 
 
+        }
+    }
+
+    fun comprar(){
+        lifecycleScope.launch(Dispatchers.IO) {
+            val prefs = requireActivity().getSharedPreferences("es.rfvl.ronal_proyect_dam", Context.MODE_PRIVATE);
+            val nombre = prefs.getString("signature","");
+            if (nombre != null) {
+                for (p: Articulo in selectedArticles){
+                    CompradosManager().addProductoComprado(p.id.toString(), nombre)
+                    onDeleteFavClick(p)
+                }
+            }
         }
     }
 }
