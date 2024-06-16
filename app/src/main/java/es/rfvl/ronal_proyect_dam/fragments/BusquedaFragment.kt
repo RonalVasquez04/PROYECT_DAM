@@ -23,6 +23,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
+
 class BusquedaFragment : Fragment() , busquedaAdapter.OnProductClickListener , busquedaAdapter.OnFavClickListener{
     private lateinit var binding: FragmentBusquedaBinding
     private lateinit var mAdapter: busquedaAdapter

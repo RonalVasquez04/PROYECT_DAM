@@ -44,7 +44,7 @@ android {
 
 dependencies {
 
-
+    implementation ("com.sun.mail:javax.mail:1.6.2")
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
     implementation ("com.google.firebase:firebase-auth")
     implementation ("com.google.firebase:firebase-messaging-ktx")

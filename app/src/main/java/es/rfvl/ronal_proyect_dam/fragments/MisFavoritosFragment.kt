@@ -1,18 +1,24 @@
 package es.rfvl.ronal_proyect_dam.fragments
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
 import es.rfvl.ronal_proyect_dam.DataApi.ArticuloService
 import es.rfvl.ronal_proyect_dam.DataApi.RetrofitObject
 import es.rfvl.ronal_proyect_dam.Firebase.ComentariosManager
@@ -185,15 +191,40 @@ class MisFavoritosFragment : Fragment()  , articuloFavAdapter.OnProductFavClickL
     }
 
     fun comprar(){
-        lifecycleScope.launch(Dispatchers.IO) {
-            val prefs = requireActivity().getSharedPreferences("es.rfvl.ronal_proyect_dam", Context.MODE_PRIVATE);
-            val nombre = prefs.getString("signature","");
-            if (nombre != null) {
-                for (p: Articulo in selectedArticles){
-                    CompradosManager().addProductoComprado(p.id.toString(), nombre)
-                    onDeleteFavClick(p)
+        val snackbar = Snackbar.make(binding.root, "", Snackbar.LENGTH_INDEFINITE)
+        var totalPagar = calcularTotal()
+        val snackbarView = snackbar.view as Snackbar.SnackbarLayout
+        val customView = layoutInflater.inflate(R.layout.custom_snackbar, null)
+        customView.findViewById<TextView>(R.id.snackbarText).text = ("Total a pagar : " + totalPagar.toString() + "€")
+
+        customView.findViewById<Button>(R.id.btnYes).setOnClickListener {
+            lifecycleScope.launch(Dispatchers.IO) {
+                val prefs = requireActivity().getSharedPreferences("es.rfvl.ronal_proyect_dam", Context.MODE_PRIVATE);
+                val nombre = prefs.getString("signature","");
+                if (nombre != null) {
+                    for (p: Articulo in selectedArticles){
+                        CompradosManager().addProductoComprado(p.id.toString(), nombre)
+                        onDeleteFavClick(p)
+                    }
                 }
             }
+
+            snackbar.dismiss()
         }
+
+        customView.findViewById<Button>(R.id.btnNo).setOnClickListener {
+            snackbar.dismiss()
+        }
+        snackbarView.addView(customView)
+        snackbar.show()
+    }
+
+    fun calcularTotal(): Double{
+        var total = 0.0;
+        for (p: Articulo in selectedArticles){
+                total += p.price
+        }
+
+        return total;
     }
 }
